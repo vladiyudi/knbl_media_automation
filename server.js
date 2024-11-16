@@ -17,7 +17,7 @@ app.use(helmet());
 
 // CORS configuration
 app.use(cors({
-    origin: '*', // Allow all origins
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -26,18 +26,29 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Logging
-app.use(morgan('dev'));
+// Logging - only in development
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
 
 // Rate limiting
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 1000,
+    max: process.env.NODE_ENV === 'production' ? 50 : 100
 });
 app.use(limiter);
 
 // Routes
 app.use(apiPrefix, apiRoutes);
+
+// Root route for Vercel health checks
+app.get('/', (req, res) => {
+    res.json({
+        status: 'ok',
+        message: 'Server is running',
+        environment: process.env.NODE_ENV
+    });
+});
 
 // 404 handler
 app.use((req, res) => {
@@ -50,25 +61,13 @@ app.use((req, res) => {
 // Error handling
 app.use(errorHandler);
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-    console.log('SIGTERM signal received: closing HTTP server');
-    server.close(() => {
-        console.log('HTTP server closed');
-        process.exit(0);
-    });
-});
+// Export for Vercel
+module.exports = app;
 
-const server = app.listen(port, () => {
-    console.log(`Server is running in ${process.env.NODE_ENV} mode on http://localhost:${port}`);
-    console.log(`API endpoints available at http://localhost:${port}${apiPrefix}`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-    console.log('UNHANDLED REJECTION! 💥 Shutting down...');
-    console.error(err);
-    server.close(() => {
-        process.exit(1);
+// Start server if not running in Vercel
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, () => {
+        console.log(`Server is running in ${process.env.NODE_ENV} mode on http://localhost:${port}`);
+        console.log(`API endpoints available at http://localhost:${port}${apiPrefix}`);
     });
-});
+}
