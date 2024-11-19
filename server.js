@@ -12,6 +12,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 const apiPrefix = process.env.API_PREFIX || '/api';
 
+// Set server timeout
+app.set('timeout', 60000); // 60 seconds
+app.use((req, res, next) => {
+    res.setTimeout(60000, () => {
+        res.status(408).send('Request has timed out');
+    });
+    next();
+});
+
 // Security middleware
 app.use(helmet());
 
