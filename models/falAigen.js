@@ -4,18 +4,19 @@ fal.config({
   credentials: process.env.FAL_API_KEY
 });
 
-async function imageGeneration(prompt, size="square_hd", model="flux-pro/new", num_inference_steps=28, guidance_scale=3.5, num_images=1, safety_tolerance=6) {
+async function imageGeneration(prompt, size="square_hd", model,  num_inference_steps=28, guidance_scale=3.5, num_images=1, safety_tolerance=6) {
     const result = await fal.subscribe(`fal-ai/${model}`, {
         input: {
-          prompt: prompt
+          prompt: prompt,
+          enable_safety_checker: false,
+         
+          image_size: size,
+          safety_tolerance: safety_tolerance,
+          num_inference_steps: num_inference_steps,
+          guidance_scale: guidance_scale,
+          num_images: num_images,
         },
-        enable_safety_checker: false,
         logs: true,
-        image_size: size,
-        safety_tolerance: safety_tolerance,
-        num_inference_steps: num_inference_steps,
-        guidance_scale: guidance_scale,
-        num_images: num_images,
         onQueueUpdate: (update) => {
           if (update.status === "IN_PROGRESS") {
             update.logs.map((log) => log.message).forEach(console.log);
