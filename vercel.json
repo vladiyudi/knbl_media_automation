@@ -1,21 +1,17 @@
 {
   "version": 2,
   "functions": {
-    "server.js": {
+    "api/index.js": {
       "maxDuration": 60
     }
   },
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "server.js",
+      "src": "/(.*)",
+      "dest": "api/index.js",
       "headers": {
         "Access-Control-Allow-Origin": "*"
       }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
     }
   ],
   "env": {
