@@ -7,11 +7,15 @@
   },
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "api/index.js",
+      "src": "/api/(.*)",
+      "dest": "/api/index.js",
       "headers": {
         "Access-Control-Allow-Origin": "*"
       }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.js"
     }
   ],
   "env": {

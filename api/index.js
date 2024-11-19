@@ -46,7 +46,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use('', apiRoutes);
+app.use('/api', apiRoutes);
 
 // Root route for Vercel health checks
 app.get('/', (req, res) => {
