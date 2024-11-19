@@ -6,7 +6,7 @@ async function generateImage(req, res) {
     const result = await imageGeneration(prompt, size)
     res.status(200).json({
         message: "success",
-        result
+        result: result.data
     })
 }
 

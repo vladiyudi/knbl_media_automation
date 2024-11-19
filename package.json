@@ -2,13 +2,13 @@
   "name": "simple-express-server",
   "version": "1.0.0",
   "description": "Simple Express server with one endpoint",
-  "main": "server.js",
+  "main": "api/index.js",
   "engines": {
     "node": ">=14.0.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js",
     "vercel-build": "echo hello"
   },
   "dependencies": {
