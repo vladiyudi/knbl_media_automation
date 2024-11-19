@@ -3,17 +3,16 @@
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "serverTimeout": 60000,
-        "maxLambdaSize": "50mb"
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "server.js"
+      "dest": "server.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
     },
     {
       "src": "/(.*)",
@@ -22,5 +21,7 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "regions": ["sfo1"],
+  "serverTimeout": 60
 }
