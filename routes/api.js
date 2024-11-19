@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { generateFluxLora } = require('../controlers/fluxLora');
+const { generateImage } = require('../controlers/imageGeneration');
+const { upscaleImage } = require('../controlers/imageUpscale');
 
 router.get('/hello', (req, res) => {
     res.json({ 
@@ -18,6 +20,9 @@ router.get('/health', (req, res) => {
     });
 });
 
+router.post('/generateImage', generateImage);
+
+router.post('/upscaleImage', upscaleImage);
 
 router.post('/generateFluxLora', generateFluxLora);
 
