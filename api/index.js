@@ -9,6 +9,7 @@ const errorHandler = require('../middleware/errorHandler');
 const apiRoutes = require('../routes/api');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 // Set server timeout
 app.set('timeout', 60000); // 60 seconds
@@ -68,4 +69,13 @@ app.use((req, res) => {
 // Error handling
 app.use(errorHandler);
 
+// Start server if not in production (Vercel)
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(port, () => {
+        console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on http://localhost:${port}`);
+        console.log(`API endpoints available at http://localhost:${port}/api`);
+    });
+}
+
+// Export the Express app
 module.exports = app;
